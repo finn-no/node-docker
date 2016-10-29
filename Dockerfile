@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:6.7.0
+FROM mhart/alpine-node:6.9.1
 
 RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 	&& update-ca-certificates \
