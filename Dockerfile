@@ -2,6 +2,8 @@ FROM mhart/alpine-node:6.9.1
 
 ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}"
 
+EXPOSE 3000
+
 RUN addgroup -S node && adduser -S -s /bin/sh node node
 
 RUN mkdir -p /home/node/src
