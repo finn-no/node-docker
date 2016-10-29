@@ -15,6 +15,10 @@ RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 	&& chmod +x /usr/local/bin/dumb-init \
 	&& apk del dumb-init-dependencies
 
+# Install dependencies for native builds
+# Remove it in your own Dockerfile by doing `apk del build-dependencies`
+RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git
+
 RUN npm install --global yarn
 
 ADD scripts /home/node/scripts
