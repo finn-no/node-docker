@@ -1,6 +1,6 @@
 FROM mhart/alpine-node:6.9.1
 
-ENV NODE_ENV production
+ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}"
 
 RUN addgroup -S node && adduser -S -s /bin/sh node node
 
@@ -14,5 +14,7 @@ RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 	&& apk del dumb-init-dependencies
 
 RUN npm install --global yarn
+
+ADD scripts /home/node/scripts
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"] 
