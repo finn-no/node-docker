@@ -6,4 +6,6 @@ RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 	&& chmod +x /usr/local/bin/dumb-init \
 	&& apk del dumb-init-dependencies
 
+RUN npm install --global yarn
+
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"] 
