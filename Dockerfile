@@ -1,5 +1,7 @@
 FROM mhart/alpine-node:6.9.1
 
+MAINTAINER Simen Bekkhus <simen.bekkhus@finn.no>
+
 ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}"
 
 EXPOSE 3000
