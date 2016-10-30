@@ -15,6 +15,6 @@ RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 	&& chmod +x /usr/local/bin/dumb-init \
 	&& apk del dumb-init-dependencies
 
-ADD scripts /home/node/scripts
+COPY scripts /home/node/scripts
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
