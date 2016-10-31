@@ -53,16 +53,28 @@ then
   exit 1
 fi
 
-docker build -t "$tag" -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+echo Building docker images
 
-# Spawn a subshell to avoid `cd`ing back
+# Use subshells to print command being run
 (
+set -x
+
+docker build -t "$tag" -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+)
+
+(
+set -x
+
 cd onbuild/
 
 docker build -t "$onbuild_tag" -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
-docker push $tag
+echo Pushing "$tag" to Docker Hub
+
+docker push "$tag"
+
+echo Tagging the commit, and pusing it to GitHub
 
 git tag "$1" -m \""$1"\"
 
