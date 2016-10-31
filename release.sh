@@ -45,19 +45,15 @@ if [[ -n "$revision" ]];
 fi;
 
 echo This will create the following tags:
-echo "$tag:latest"
 echo "$tag_major"
 echo "$tag_minor"
 echo "$tag_patch"
-echo "$onbuild_tag"
 echo "$onbuild_tag_major"
 echo "$onbuild_tag_minor"
 echo "$onbuild_tag_patch"
-echo "$test_tag"
 echo "$test_tag_major"
 echo "$test_tag_minor"
 echo "$test_tag_patch"
-echo "$test_onbuild_tag"
 echo "$test_onbuild_tag_major"
 echo "$test_onbuild_tag_minor"
 echo "$test_onbuild_tag_patch"
@@ -77,7 +73,7 @@ echo Building docker images
 (
 set -x
 
-docker build -t "$tag" -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+docker build -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
 
 (
@@ -85,7 +81,7 @@ set -x
 
 cd onbuild/
 
-docker build -t "$onbuild_tag" -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
+docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
 (
@@ -93,7 +89,7 @@ set -x
 
 cd test/
 
-docker build -t "$test_tag" -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+docker build -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
 )
 
 (
@@ -101,7 +97,7 @@ set -x
 
 cd test-onbuild/
 
-docker build -t "$test_onbuild_tag" -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
+docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
 )
 
 echo Pushing "$tag" to Docker Hub
