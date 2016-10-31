@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-if [[ -n $(git status -s) ]];
-  then
-    echo git working directory is not clean
-    exit 1;
-fi;
+if [[ -n $(git status -s) ]]
+then
+  echo git working directory is not clean
+  exit 1
+fi
 
 versions=(${1//./ })
 
@@ -36,6 +36,22 @@ if [[ -n $revision ]];
     onbuild_tag_patch=$onbuild_tag_patch-$revision
 fi;
 
+echo This will create the following tags:
+echo "$tag_major"
+echo "$tag_minor"
+echo "$tag_patch"
+echo "$onbuild_tag_major"
+echo "$onbuild_tag_minor"
+echo "$onbuild_tag_patch"
+
+# http://stackoverflow.com/a/1885534/1850276
+read -p "Do you want to continue? (yY)" -n 1 -r
+echo # move to a new line
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+  exit 1
+fi
 
 docker build -t "$tag" -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 
