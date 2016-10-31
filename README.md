@@ -28,12 +28,16 @@ COPY . .
 
 RUN chown -R node:node .
 USER node
+
+CMD ["node", "server.js"]
 ```
 
-You can extend from `onbuild` to avoid having such a big `Dockerfile` which has all of this built in.
+You can extend from `onbuild` to avoid having such a big `Dockerfile` which has all of this (except for `CMD`) built in.
 
 ```Dockerfile
 FROM finntech/node:onbuild-<version>
+
+CMD ["node", "server.js"]
 ```
 
 Make sure to have a `.dockerignore` file in your project, ignoring (at least) `node_modules/`.
