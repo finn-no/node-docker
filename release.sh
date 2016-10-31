@@ -34,14 +34,14 @@ test_onbuild_tag_major="$test_onbuild_tag-$major"
 test_onbuild_tag_minor="$test_onbuild_tag_major.$minor"
 test_onbuild_tag_patch="$test_onbuild_tag_minor.$patch"
 
-if [[ -n "$revision" ]];
-  then
-    tag_major="$tag_major-$revision"
-    tag_minor="$tag_minor-$revision"
-    tag_patch="$tag_patch-$revision"
-    onbuild_tag_major="$onbuild_tag_major-$revision"
-    onbuild_tag_minor="$onbuild_tag_minor-$revision"
-    onbuild_tag_patch="$onbuild_tag_patch-$revision"
+if [[ -n "$revision" ]]
+then
+  tag_major="$tag_major-$revision"
+  tag_minor="$tag_minor-$revision"
+  tag_patch="$tag_patch-$revision"
+  onbuild_tag_major="$onbuild_tag_major-$revision"
+  onbuild_tag_minor="$onbuild_tag_minor-$revision"
+  onbuild_tag_patch="$onbuild_tag_patch-$revision"
 fi;
 
 echo This will create the following tags:
