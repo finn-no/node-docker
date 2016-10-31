@@ -10,6 +10,8 @@ versions=(${1//./ })
 
 tag=finntech/node
 onbuild_tag="$tag:onbuild"
+test_tag="$tag:test"
+test_onbuild_tag="$test_tag-onbuild"
 
 major=${versions[0]}
 minor=${versions[1]}
@@ -25,6 +27,12 @@ tag_patch="$tag_minor.$patch"
 onbuild_tag_major="$onbuild_tag-$major"
 onbuild_tag_minor="$onbuild_tag_major.$minor"
 onbuild_tag_patch="$onbuild_tag_minor.$patch"
+test_tag_major="$test_tag-$major"
+test_tag_minor="$test_tag_major.$minor"
+test_tag_patch="$test_tag_minor.$patch"
+test_onbuild_tag_major="$test_onbuild_tag-$major"
+test_onbuild_tag_minor="$test_onbuild_tag_major.$minor"
+test_onbuild_tag_patch="$test_onbuild_tag_minor.$patch"
 
 if [[ -n "$revision" ]];
   then
@@ -37,12 +45,22 @@ if [[ -n "$revision" ]];
 fi;
 
 echo This will create the following tags:
+echo "$tag:latest"
 echo "$tag_major"
 echo "$tag_minor"
 echo "$tag_patch"
+echo "$onbuild_tag"
 echo "$onbuild_tag_major"
 echo "$onbuild_tag_minor"
 echo "$onbuild_tag_patch"
+echo "$test_tag"
+echo "$test_tag_major"
+echo "$test_tag_minor"
+echo "$test_tag_patch"
+echo "$test_onbuild_tag"
+echo "$test_onbuild_tag_major"
+echo "$test_onbuild_tag_minor"
+echo "$test_onbuild_tag_patch"
 
 # http://stackoverflow.com/a/1885534/1850276
 read -p "Do you want to continue? (yY)" -n 1 -r
@@ -68,6 +86,22 @@ set -x
 cd onbuild/
 
 docker build -t "$onbuild_tag" -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
+)
+
+(
+set -x
+
+cd test/
+
+docker build -t "$test_tag" -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+)
+
+(
+set -x
+
+cd test-onbuild/
+
+docker build -t "$test_onbuild_tag" -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
 )
 
 echo Pushing "$tag" to Docker Hub

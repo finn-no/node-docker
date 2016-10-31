@@ -11,12 +11,13 @@ Create a `Dockerfile` in the root of your project:
 ```Dockerfile
 FROM finntech/node:<version>
 
-# All but package.json is optional
+# All but package.json is optional, remove unused if you want
 COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./
 
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small
 # NOTE: `install-dependencies.sh` only installs production dependencies, make sure you do transpiling/bundling outside of the image
+# Drop the yarn commands if you don't use it
 RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
     npm install --global yarn && \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
@@ -69,6 +70,42 @@ Changes might include:
 
 - installation optimizations
 - other tweaks
+
+## Testing
+
+The normal docker image shouldn't be used for tests, use `finntech/node:test-<version>` or `finntech/node:test-onbuild-<version>`.
+
+Dockerfile.test:
+```Dockerfile
+FROM finntech/node:test-<version>
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+```
+
+Default command when run is `npm test`.
+
+```sh
+docker build -f Dockerfile.test -t test-app . && docker run test-app
+# or
+docker build -f Dockerfile.test -t test-app . && docker run test-app npm run custom-test
+```
+
+Using `onbuild` is shorter. It will use `yarn` to install if a `yarn.lock` file is present.
+
+Dockerfile.test:
+```Dockerfile
+FROM finntech/node:test-onbuild-<version>
+```
+
+```sh
+docker build -f Dockerfile.test -t test-app . && docker run test-app
+# or
+docker build -f Dockerfile.test -t test-app . && docker run test-app npm run custom-test
+```
 
 ## Releasing new versions
 
