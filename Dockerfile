@@ -1,10 +1,22 @@
-FROM mhart/alpine-node:6.7.0
+FROM mhart/alpine-node:6.9.1
 
-RUN apk update \
-	&& apk add ca-certificates wget \
-	&& update-ca-certificates
-RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64
-RUN chmod +x /usr/local/bin/dumb-init
+MAINTAINER Simen Bekkhus <simen.bekkhus@finn.no>
 
-ENTRYPOINT ["/usr/local/bin/dumb-init", "--"] 
+ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}"
 
+EXPOSE 3000
+
+RUN addgroup -S node && adduser -S -s /bin/sh node node
+
+RUN mkdir -p /home/node/src
+WORKDIR /home/node/src
+
+RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
+	&& update-ca-certificates \
+	&& wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 \
+	&& chmod +x /usr/local/bin/dumb-init \
+	&& apk del dumb-init-dependencies
+
+COPY scripts /home/node/scripts
+
+ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
