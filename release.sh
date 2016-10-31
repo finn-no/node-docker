@@ -46,8 +46,8 @@ cd onbuild/
 docker build -t "$onbuild_tag" -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
+docker push $tag
+
 git tag "$1" -m \""$1"\"
 
 git push origin master --follow-tags
-
-docker push $tag
