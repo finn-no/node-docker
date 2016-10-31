@@ -16,6 +16,7 @@ COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./
 
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small
+# NOTE: `install-dependencies.sh` only installs production dependencies, make sure you do transpiling/bundling outside of the image
 RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
     npm install --global yarn && \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
@@ -35,6 +36,7 @@ CMD ["node", "server.js"]
 You can extend from `onbuild` to avoid having such a big `Dockerfile` which has all of this (except for `CMD`) built in.
 
 ```Dockerfile
+# NOTE: `onbuild` only installs production dependencies, make sure you do transpiling/bundling outside of the image
 FROM finntech/node:onbuild-<version>
 
 CMD ["node", "server.js"]
