@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:7.0.0
+FROM mhart/alpine-node:7.1.0
 
 MAINTAINER Simen Bekkhus <simen.bekkhus@finn.no>
 

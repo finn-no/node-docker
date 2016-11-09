@@ -1,4 +1,4 @@
-FROM finntech/node:7.0.0
+FROM finntech/node:7.1.0
 
 # All but package.json is optional
 ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./

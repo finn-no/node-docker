@@ -1,4 +1,4 @@
-FROM finntech/node:7.0.0
+FROM finntech/node:7.1.0
 
 # Reset NODE_ENV=production
 ENV NODE_ENV test
