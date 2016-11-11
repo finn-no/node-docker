@@ -1,12 +1,10 @@
-FROM mhart/alpine-node:7.1.0
+FROM node:7.1.0-alpine
 
 MAINTAINER Simen Bekkhus <simen.bekkhus@finn.no>
 
 ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}"
 
 EXPOSE 3000
-
-RUN addgroup -S node && adduser -S -s /bin/sh node node
 
 RUN mkdir -p /home/node/src
 WORKDIR /home/node/src
@@ -20,3 +18,5 @@ RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 COPY scripts /home/node/scripts
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
+
+CMD ["node"]
