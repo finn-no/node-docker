@@ -6,11 +6,11 @@ ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small
 ONBUILD RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
-    npm install --global yarn && \
+    npm install --loglevel=warn --global yarn && \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
     install-dependencies.sh && \
-    npm cache clean && yarn cache clean && \
-    npm uninstall --global yarn && npm uninstall --global npm && \
+    npm cache clean --loglevel=warn && yarn cache clean && \
+    npm uninstall --loglevel=warn --global yarn && npm uninstall --loglevel=warn --global npm && \
     apk del build-dependencies
 
 ONBUILD COPY . .
