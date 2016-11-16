@@ -18,5 +18,3 @@ RUN apk add --no-cache --virtual dumb-init-dependencies ca-certificates wget \
 COPY scripts /home/node/scripts
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
-
-CMD ["node"]
