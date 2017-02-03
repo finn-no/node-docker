@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [[ -n $(git status -s) ]]
 then
   echo git working directory is not clean
@@ -20,6 +22,8 @@ patch_and_revision=(${versions[2]//-/ })
 
 patch=${patch_and_revision[0]}
 revision=${patch_and_revision[1]}
+
+node_version="$major.$minor.$patch"
 
 tag_major="$tag:$major"
 tag_minor="$tag_major.$minor"
@@ -42,7 +46,7 @@ then
   onbuild_tag_major="$onbuild_tag_major-$revision"
   onbuild_tag_minor="$onbuild_tag_minor-$revision"
   onbuild_tag_patch="$onbuild_tag_patch-$revision"
-fi;
+fi
 
 echo This will create the following tags:
 echo "$tag_major"
@@ -67,14 +71,44 @@ then
   exit 1
 fi
 
+echo Copying over base Dockerfiles
+
+rm -rf build/
+
+mkdir -p "build/$major/base/scripts"
+
+cd "build/$major"
+
+mkdir onbuild
+mkdir test
+mkdir test-onbuild
+
+cp ../../Dockerfile.base base/Dockerfile
+cp -r ../../scripts/ base/scripts/
+cp ../../Dockerfile.onbuild onbuild/Dockerfile
+cp ../../Dockerfile.test test/Dockerfile
+cp ../../Dockerfile.test-onbuild test-onbuild/Dockerfile
+
+echo Setting version in Dockerfiles to "$node_version"
+
+# -i '' -e is necessary on OSX
+# http://stackoverflow.com/a/19457213/1850276
+find . -type f -exec sed -i '' -e  "s/0.0.0/$node_version/" {} \;
+
 echo Building docker images
+
+printf "\n\nBuilding base\n\n"
 
 # Use subshells to print command being run
 (
 set -x
 
+cd base/
+
 docker build -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
+
+printf "\n\nBuilding onbuild\n\n"
 
 (
 set -x
@@ -84,6 +118,8 @@ cd onbuild/
 docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
+printf "\n\nBuilding test\n\n"
+
 (
 set -x
 
@@ -91,6 +127,8 @@ cd test/
 
 docker build -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
 )
+
+printf "\n\nBuilding test-onbuild\n\n"
 
 (
 set -x
