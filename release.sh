@@ -105,7 +105,7 @@ set -x
 
 cd base/
 
-docker build -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+docker build --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
 
 printf "\n\nBuilding onbuild\n\n"
@@ -125,7 +125,7 @@ set -x
 
 cd test/
 
-docker build -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
 )
 
 printf "\n\nBuilding test-onbuild\n\n"
