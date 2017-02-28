@@ -144,4 +144,6 @@ docker push "$tag"
 
 echo Tagging the commit, and pusing it to GitHub
 
+git tag "$1" -m \""$1"\"
+
 git push origin master --follow-tags
