@@ -63,7 +63,7 @@ echo "$test_onbuild_tag_minor"
 echo "$test_onbuild_tag_patch"
 
 # http://stackoverflow.com/a/1885534/1850276
-read -p "Do you want to continue? (yY)" -n 1 -r
+read -p "Do you want to continue? (yN)" -n 1 -r
 echo # move to a new line
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]
