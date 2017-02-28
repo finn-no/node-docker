@@ -2,7 +2,7 @@
 
 A base image for Node.js applications, using Alpine.
 
-This image is located [at Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/artifacts/browse/tree/General/docker-local/finntech/node).
+This image is hosted privately [at Schibsted's Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/artifacts/browse/tree/General/docker-local/finntech/node).
 
 ## Usage
 
