@@ -2,14 +2,14 @@
 
 A base image for Node.js applications, using Alpine.
 
-This image is located [at Docker Hub](https://hub.docker.com/r/finntech/node/).
+This image is hosted privately [at Schibsted's Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/artifacts/browse/tree/General/docker-local/finntech/node).
 
 ## Usage
 
 Create a `Dockerfile` in the root of your project:
 
 ```Dockerfile
-FROM finntech/node:<version>
+FROM containers.schibsted.io/finntech/node:<version>
 
 # All but package.json is optional, remove unused if you want
 COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./
@@ -38,7 +38,7 @@ You can extend from `onbuild` to avoid having such a big `Dockerfile` which has 
 
 ```Dockerfile
 # NOTE: `onbuild` only installs production dependencies, make sure you do transpiling/bundling outside of the image
-FROM finntech/node:onbuild-<version>
+FROM containers.schibsted.io/finntech/node:onbuild-<version>
 
 CMD ["node", "server.js"]
 ```
@@ -75,11 +75,11 @@ Changes might include:
 
 ## Testing
 
-The normal docker image shouldn't be used for tests, use `finntech/node:test-<version>` or `finntech/node:test-onbuild-<version>`.
+The normal docker image shouldn't be used for tests, use `containers.schibsted.io/finntech/node:test-<version>` or `containers.schibsted.io/finntech/node:test-onbuild-<version>`.
 
 Dockerfile.test:
 ```Dockerfile
-FROM finntech/node:test-<version>
+FROM containers.schibsted.io/finntech/node:test-<version>
 
 COPY package.json .
 
@@ -100,7 +100,7 @@ Using `onbuild` is shorter. It will use `yarn` to install if a `yarn.lock` file 
 
 Dockerfile.test:
 ```Dockerfile
-FROM finntech/node:test-onbuild-<version>
+FROM containers.schibsted.io/finntech/node:test-onbuild-<version>
 ```
 
 ```sh
