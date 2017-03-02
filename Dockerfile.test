@@ -6,6 +6,4 @@ ENV NODE_ENV test
 # Install dependencies for native builds and yarn
 RUN apk add --no-cache make gcc g++ python git
 
-RUN npm install --global --loglevel warn yarn
-
 CMD ["npm", "test"]
