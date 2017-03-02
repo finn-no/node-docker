@@ -17,13 +17,10 @@ COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small
 # NOTE: `install-dependencies.sh` only installs production dependencies, make sure you do transpiling/bundling outside of the image
-# Drop the yarn commands if you don't use it
 RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
-    npm install --global yarn && \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
     install-dependencies.sh && \
-    npm cache clean && yarn cache clean && \
-    npm uninstall --global yarn && npm uninstall --global npm && \
+    rm /usr/local/bin/yarn && npm uninstall --global npm && \
     apk del build-dependencies
 
 COPY . .
@@ -75,7 +72,8 @@ Changes might include:
 
 ## Testing
 
-The normal docker image shouldn't be used for tests, use `containers.schibsted.io/finntech/node:test-<version>` or `containers.schibsted.io/finntech/node:test-onbuild-<version>`.
+The normal docker image shouldn't be used for tests, use `containers.schibsted.io/finntech/node:test-<version>` or
+`containers.schibsted.io/finntech/node:test-onbuild-<version>`.
 
 Dockerfile.test:
 ```Dockerfile
