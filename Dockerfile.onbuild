@@ -10,7 +10,6 @@ ONBUILD RUN apk add --no-cache --virtual build-dependencies make gcc g++ python 
     npm install --loglevel warn --global yarn && \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
     install-dependencies.sh && \
-    npm cache clean --loglevel warn && yarn cache clean && \
     npm uninstall --loglevel warn --global yarn && npm uninstall --loglevel warn --global npm && \
     apk del build-dependencies
 
