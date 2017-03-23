@@ -2,6 +2,15 @@
 
 set -e
 
+# xargs on mac throws on unknown flags, but the behavior is the default. So try
+# to run it, and if it fails, use plain `xargs`
+xargs_command="xargs --no-run-if-empty"
+
+if ! echo "" | ${xargs_command} > /dev/null 2>&1
+then
+  xargs_command="xargs"
+fi
+
 if [[ -n $(git status -s) ]]
 then
   echo git working directory is not clean
@@ -71,7 +80,22 @@ then
   exit 1
 fi
 
-echo Copying over base Dockerfiles
+printf "\n\nDeleting old container images\n\n"
+
+# Because we might get
+# "Error response from daemon: conflict: unable to delete 053f4edd648c (cannot be forced) - image has dependent child images"
+# we need to run in a loop to do multiple runs
+# The first one cleans up dangling images (which might be dependents), the
+# second one removes images from this build
+until docker images --quiet --no-trunc --filter "dangling=true" | \
+    ${xargs_command} docker rmi && docker images | \
+    awk -v tag="$tag" '$0 ~ tag { print $3 }' | sort -u | \
+    ${xargs_command} docker rmi -f
+do
+  true
+done
+
+printf "\n\nCopying over base Dockerfiles\n\n"
 
 rm -rf build/
 
@@ -91,9 +115,9 @@ cp ../../Dockerfile.test-onbuild test-onbuild/Dockerfile
 
 echo Setting version in Dockerfiles to "$node_version"
 
-# -i '' -e is necessary on OSX
+# -i "" -e is necessary on OSX
 # http://stackoverflow.com/a/19457213/1850276
-find . -type f -exec sed -i '' -e  "s/0.0.0/$node_version/" {} \;
+find . -type f -exec sed -i "" -e "s/0.0.0/$node_version/" {} \;
 
 echo Building docker images
 
