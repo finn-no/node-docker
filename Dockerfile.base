@@ -1,6 +1,8 @@
 FROM node:0.0.0-alpine
 
 LABEL maintainer "Simen Bekkhus <simen.bekkhus@finn.no>"
+LABEL no.finn.docker.node-version "$NODE_VERSION"
+LABEL no.finn.docker.yarn-version "$YARN_VERSION"
 
 ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}"
 
