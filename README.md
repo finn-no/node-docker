@@ -58,17 +58,13 @@ The application is now available at `http://localhost:3030/`!
 ## Tags
 
 The goal is that this image should be as static as possible, and the only tags that should happen are Node.js major, minor and patch version.
-But since we're still working out how to do this, we might append a `-${FINN_INTERNAL_REVISION}` to the end of the tags.
 
 `latest` tag will refer to latest LTS version of Node.
 
 All of `finntech/node:major`, `finntech/node:major.minor` and `finntech/node:major.minor.patch` are available.
 See https://hub.docker.com/r/finntech/node/tags/
 
-Changes might include:
-
-- installation optimizations
-- other tweaks
+NOTE: It's highly recommended to just specify major version, so that you always get the latest patches.
 
 ## Testing
 
