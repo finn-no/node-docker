@@ -119,7 +119,8 @@ set -x
 
 cd base/
 
-docker build --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+# This one does `pull` to ensure we've got the latest upstream image
+docker build --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
 
 printf "\n\nBuilding onbuild\n\n"
