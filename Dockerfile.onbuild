@@ -1,7 +1,7 @@
 FROM containers.schibsted.io/finntech/node:0.0.0
 
 # All but package.json is optional
-ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* ./
+ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
 
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small
