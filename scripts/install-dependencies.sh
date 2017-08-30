@@ -10,5 +10,5 @@ if [ -f "/home/node/src/yarn.lock" ];
     yarn cache clean
   else
     npm install
-    npm cache clean
+    npm cache clean --force
 fi
