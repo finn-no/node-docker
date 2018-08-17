@@ -4,6 +4,14 @@ A base image for Node.js applications, using Alpine.
 
 This image is hosted privately [at Schibsted's Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/artifacts/browse/tree/General/docker-local/finntech/node).
 
+## Why
+
+These images exists to simplify development of Node applications at FINN. What they provide over the official images (on which the are based) are:
+
+- Automatically install dependencies using `yarn` or `npm`, depending on which lockfile is present
+- Ready to use `onbuild` versions which handles most of what you'll need for the image to be built (see below)
+- Installs [`dumb-init`](https://github.com/Yelp/dumb-init) which fixes some issues with signal forwarding
+
 ## Usage
 
 Create a `Dockerfile` in the root of your project:
@@ -65,7 +73,7 @@ The `major`, `minor` and `patch` portions of the image tag represents the `major
 
 All of `containers.schibsted.io/finntech/node:major`, `containers.schibsted.io/finntech/node:major.minor` and `containers.schibsted.io/finntech/node:major.minor.patch` are available.
 
-See https://artifacts.schibsted.io/artifactory/webapp/#/packages/docker/finntech%252Fnode/
+See the list of all images on [Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/packages/docker/finntech%252Fnode/).
 
 NOTE: It's highly recommended to just specify major version, so that you always get the latest patches.
 
