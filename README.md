@@ -117,6 +117,12 @@ docker build -f Dockerfile.test -t test-app . && docker run test-app npm run cus
 
 ## Releasing new versions
 
+### When
+
+We try to release new versions of these images as soon as possible after the official ones are released.
+
+### How
+
 Log in to Artifactory:
 
 `docker login containers.schibsted.io`
