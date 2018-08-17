@@ -62,16 +62,17 @@ The goal is that this image should be as static as possible, and the only tags t
 `latest` tag will refer to latest LTS version of Node.
 
 All of `finntech/node:major`, `finntech/node:major.minor` and `finntech/node:major.minor.patch` are available.
+
 See https://hub.docker.com/r/finntech/node/tags/
 
 NOTE: It's highly recommended to just specify major version, so that you always get the latest patches.
 
 ## Testing
 
-The normal docker image shouldn't be used for tests, use `containers.schibsted.io/finntech/node:test-<version>` or
-`containers.schibsted.io/finntech/node:test-onbuild-<version>`.
+The normal docker image shouldn't be used for tests, use `containers.schibsted.io/finntech/node:test-<version>` or `containers.schibsted.io/finntech/node:test-onbuild-<version>`.
 
 Dockerfile.test:
+
 ```Dockerfile
 FROM containers.schibsted.io/finntech/node:test-<version>
 
@@ -93,6 +94,7 @@ docker build -f Dockerfile.test -t test-app . && docker run test-app npm run cus
 Using `onbuild` is shorter. It will use `yarn` to install if a `yarn.lock` file is present.
 
 Dockerfile.test:
+
 ```Dockerfile
 FROM containers.schibsted.io/finntech/node:test-onbuild-<version>
 ```
