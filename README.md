@@ -139,7 +139,7 @@ Run `release.sh` to release new versions.
 
 🎉 You're done! 🎉
 
-### Oh no, it failed
+#### Oh no, it failed
 
 If the release fails for some reason (typically because you're not properly logged in to Artifactory), simply delete the git tags, correct any problems, and try again:
 
