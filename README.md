@@ -6,11 +6,11 @@ This image is hosted privately [at Schibsted's Artifactory](https://artifacts.sc
 
 ## Why
 
-These images exists to simplify development of Node applications at FINN. What they provide over the official images (on which the are based) are:
+These images exist to simplify development of Node applications at FINN. They are based on the official Node images, and additionally:
 
 - Automatically install dependencies using `yarn` or `npm`, depending on which lockfile is present
-- Ready to use `onbuild` versions which handles most of what you'll need for the image to be built (see below)
-- Installs [`dumb-init`](https://github.com/Yelp/dumb-init) which fixes some issues with signal forwarding
+- Provide ready-to-use `onbuild` versions which handle most of what you'll need for the image to be built (see below)
+- Install [`dumb-init`](https://github.com/Yelp/dumb-init) which fixes some issues with signal forwarding
 
 ## Usage
 
