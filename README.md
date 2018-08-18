@@ -4,6 +4,14 @@ A base image for Node.js applications, using Alpine.
 
 This image is hosted privately [at Schibsted's Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/artifacts/browse/tree/General/docker-local/finntech/node).
 
+## Why
+
+These images exist to simplify development of Node applications at FINN. They are based on the official Node images, and additionally:
+
+- Automatically install dependencies using `yarn` or `npm`, depending on which lockfile is present
+- Provide ready-to-use `onbuild` versions which handle most of what you'll need for the image to be built (see below)
+- Install [`dumb-init`](https://github.com/Yelp/dumb-init) which fixes some issues with signal forwarding
+
 ## Usage
 
 Create a `Dockerfile` in the root of your project:
@@ -59,11 +67,13 @@ The application is now available at `http://localhost:3030/`!
 
 The goal is that this image should be as static as possible, and the only tags that should happen are Node.js major, minor and patch version.
 
+The `major`, `minor` and `patch` portions of the image tag represents the `major`, `minor`, and `patch` of the node binary contained in the image, similar to the official images.
+
 `latest` tag will refer to latest LTS version of Node.
 
-All of `finntech/node:major`, `finntech/node:major.minor` and `finntech/node:major.minor.patch` are available.
+All of `containers.schibsted.io/finntech/node:major`, `containers.schibsted.io/finntech/node:major.minor` and `containers.schibsted.io/finntech/node:major.minor.patch` are available.
 
-See https://hub.docker.com/r/finntech/node/tags/
+See the list of all images on [Artifactory](https://artifacts.schibsted.io/artifactory/webapp/#/packages/docker/finntech%252Fnode/).
 
 NOTE: It's highly recommended to just specify major version, so that you always get the latest patches.
 
@@ -106,6 +116,12 @@ docker build -f Dockerfile.test -t test-app . && docker run test-app npm run cus
 ```
 
 ## Releasing new versions
+
+### When
+
+We try to release new versions of these images as soon as possible after the official ones are released.
+
+### How
 
 Log in to Artifactory:
 
