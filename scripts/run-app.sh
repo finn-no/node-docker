@@ -39,7 +39,7 @@ startup() {
     fi
   fi
 
-  node . $*
+  node .
 }
 
-startup $*
+startup
