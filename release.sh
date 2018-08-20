@@ -130,7 +130,7 @@ set -x
 
 cd onbuild/
 
-docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" -t "mytest" .
+docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
 printf "\n\nBuilding test\n\n"
