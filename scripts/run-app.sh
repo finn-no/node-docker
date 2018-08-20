@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
 
+log() {
+  local message=$1
+  local iso_8601_timestamp=$(date +%Y-%m-%dT%H:%M:%S%z)
+  echo '{"@version": 1, "@timestamp": "'"$iso_8601_timestamp"'", "level": "INFO", "message": "'"$1"'"}'
+}
+
 export_secrets_from_dir() {
   local secrets_dir=$1
 
@@ -10,7 +16,7 @@ export_secrets_from_dir() {
 
     local secret_name="SECRET_$filename_with_underscores";
 
-    echo "Exporting secret '$filename_without_path' as '$secret_name'"
+    log "Exporting secret '$filename_without_path' as '$secret_name'"
 
     local secret=$(<$filename);
 
@@ -29,20 +35,21 @@ start_app() {
 
 startup() {
   if [ -z ${FIAAS_ENVIRONMENT} ]; then
-    echo "FIAAS_ENVIRONMENT is unset, not looking for secrets";
+    log "FIAAS_ENVIRONMENT is unset, not looking for secrets";
   else
     local secrets_dir="/var/run/secrets/fiaas"
     if [ ! -d "$secrets_dir" ]; then
-      echo "Secrets directory '$secrets_dir' does not exist, not looking for secrets";
+      log "Secrets directory '$secrets_dir' does not exist, not looking for secrets";
     else
-      echo "FIAAS_ENVIRONMENT is set to '$FIAAS_ENVIRONMENT', looking for secrets in '$secrets_dir'";
+      log "FIAAS_ENVIRONMENT is set to '$FIAAS_ENVIRONMENT', looking for secrets in '$secrets_dir'";
 
-      local secret_count=$(find $secrets_dir -type f | wc -l)
+      # Count number of files, then trim leading whitespace
+      local secret_count=$(find $secrets_dir -type f | wc -l | tr -d ' ')
 
       if [ $secret_count -eq 0 ]; then
-        echo "Found no secrets in '$secrets_dir'"
+        log "Found no secrets in '$secrets_dir'"
       else
-        echo "Found $secret_count secret(s) in '$secrets_dir'"
+        log "Found '$secret_count' secret(s) in '$secrets_dir'"
         export_secrets_from_dir $secrets_dir
       fi
     fi
