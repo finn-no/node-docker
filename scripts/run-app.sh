@@ -18,6 +18,15 @@ export_secrets_from_dir() {
   done
 }
 
+start_app() {
+  # npm provides binaries on PATH in scripts, so we have to do the same
+  export PATH=$PATH:$(pwd)/node_modules/.bin
+
+  local start_script=$(node -p "require('./package.json').scripts.start")
+
+  $start_script
+}
+
 startup() {
   if [ -z ${FIAAS_ENVIRONMENT} ]; then
     echo "FIAAS_ENVIRONMENT is unset, not looking for secrets";
@@ -39,7 +48,7 @@ startup() {
     fi
   fi
 
-  node .
+  start_app
 }
 
 startup
