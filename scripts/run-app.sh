@@ -31,7 +31,7 @@ startup() {
       local secret_count=$(ls -l $secrets_dir | wc -l)
       echo secret count $secret_count
 
-      if (( $secret_count == 0 )); then
+      if [ $secret_count -eq 0 ]; then
         echo "Found no secrets in '$secrets_dir'"
       else
         echo "Found $secret_count secrets in '$secrets_dir'"
