@@ -20,4 +20,4 @@ RUN apk del dumb-init-dependencies
 COPY scripts /home/node/scripts
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
-CMD ["node"]
+CMD "./scripts/run-app.sh"
