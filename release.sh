@@ -130,29 +130,29 @@ set -x
 
 cd onbuild/
 
-docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
+docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" -t "mytest" .
 )
 
-printf "\n\nBuilding test\n\n"
-
-(
-set -x
-
-cd test/
-
-docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
-)
-
-printf "\n\nBuilding test-onbuild\n\n"
-
-(
-set -x
-
-cd test-onbuild/
-
-docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
-)
-
+# printf "\n\nBuilding test\n\n"
+#
+# (
+# set -x
+#
+# cd test/
+#
+# docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+# )
+#
+# printf "\n\nBuilding test-onbuild\n\n"
+#
+# (
+# set -x
+#
+# cd test-onbuild/
+#
+# docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
+# )
+# 
 # echo Pushing "$tag" to Docker Hub
 # 
 # docker push "$tag"
