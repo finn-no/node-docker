@@ -10,7 +10,7 @@ export_secrets_from_dir() {
 
     local secret_name="SECRET_$filename_with_underscores";
 
-    echo "Exporting secret $filename_without_path as $secret_name"
+    echo "Exporting secret '$filename_without_path' as '$secret_name'"
 
     local secret=$(<$filename);
 
