@@ -18,16 +18,20 @@ export_secrets_from_dir() {
   done
 }
 
-if [ -z ${FIAAS_ENVIRONMENT} ]; then
-  echo "FIAAS_ENVIRONMENT is unset, not looking for secrets";
-else
-  local secrets_dir="/var/run/secrets/fiaas"
-  if [ ! -d "$secrets_dir" ]; then
-    echo "Secrets directory '$secrets_dir' does not exist, not looking for secrets";
+startup() {
+  if [ -z ${FIAAS_ENVIRONMENT} ]; then
+    echo "FIAAS_ENVIRONMENT is unset, not looking for secrets";
   else
-    echo "FIAAS_ENVIRONMENT is set to '$FIAAS_ENVIRONMENT', looking for secrets in '$secrets_dir'";
-    export_secrets_from_dir $secrets_dir
+    local secrets_dir="/var/run/secrets/fiaas"
+    if [ ! -d "$secrets_dir" ]; then
+      echo "Secrets directory '$secrets_dir' does not exist, not looking for secrets";
+    else
+      echo "FIAAS_ENVIRONMENT is set to '$FIAAS_ENVIRONMENT', looking for secrets in '$secrets_dir'";
+      export_secrets_from_dir $secrets_dir
+    fi
   fi
-fi
 
-node .
+  node . $*
+}
+
+startup $*
