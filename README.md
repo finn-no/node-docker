@@ -70,7 +70,7 @@ As mentioned under __Why__, these images are based on the official Docker images
 
 ### `CMD`
 
-The default `CMD` behaves exactly as `npm run start`.
+The default `CMD` behaves exactly as `npm start`.
 
 In almost all cases, you should provide a `start` script and omit `CMD` from your `Dockerfile`.
 
