@@ -27,7 +27,16 @@ startup() {
       echo "Secrets directory '$secrets_dir' does not exist, not looking for secrets";
     else
       echo "FIAAS_ENVIRONMENT is set to '$FIAAS_ENVIRONMENT', looking for secrets in '$secrets_dir'";
-      export_secrets_from_dir $secrets_dir
+
+      local secret_count=$(ls -l $secrets_dir | wc -l)
+      echo secret count $secret_count
+
+      if (( $secret_count == 0 )); then
+        echo "Found no secrets in '$secrets_dir'"
+      else
+        echo "Found $secret_count secrets in '$secrets_dir'"
+        export_secrets_from_dir $secrets_dir
+      fi
     fi
   fi
 
