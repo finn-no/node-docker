@@ -28,13 +28,12 @@ startup() {
     else
       echo "FIAAS_ENVIRONMENT is set to '$FIAAS_ENVIRONMENT', looking for secrets in '$secrets_dir'";
 
-      local secret_count=$(ls -l $secrets_dir | wc -l)
-      echo secret count $secret_count
+      local secret_count=$(find $secrets_dir -type f | wc -l)
 
       if [ $secret_count -eq 0 ]; then
         echo "Found no secrets in '$secrets_dir'"
       else
-        echo "Found $secret_count secrets in '$secrets_dir'"
+        echo "Found $secret_count secret(s) in '$secrets_dir'"
         export_secrets_from_dir $secrets_dir
       fi
     fi
