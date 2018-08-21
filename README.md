@@ -11,7 +11,7 @@ These images exist to simplify development of Node applications at FINN. They ar
 - Automatically install dependencies using `yarn` or `npm`, depending on which lockfile is present
 - Provide ready-to-use `onbuild` versions which handle most of what you'll need for the image to be built (see below)
 - Install [`dumb-init`](https://github.com/Yelp/dumb-init) which fixes some issues with signal forwarding
-- Expose FIAAS secrets directly in the environment (more below)
+- Inject secrets from the file system into the environment (more below)
 
 ## Usage
 
@@ -76,11 +76,11 @@ In almost all cases, you should provide a `start` script and omit `CMD` from you
 
 ### Secrets in the environment
 
-Secrets mounted by FIAAS are available in the environment of the Node process if all of these requirements are met:
+Secrets located in the file system (e.g., mounted by Kubernetes) are available in the environment of the Node process if all of these requirements are met:
 
 - The default `CMD` is used
 - The environment variable `FIAAS_ENVIRONMENT` is set
-- The secrets directory (`/var/run/secrets/fiaas/`) exists and is nonempty
+- The secrets directory (set using `$SECRETS_DIR`, which defaults to `/var/run/secrets/fiaas`) exists and is nonempty
 
 The names of the secrets (i.e., files) are then converted from `lower-kebab-case` to `UPPER_SNAKE_CASE` and prefixed with `SECRET_`. Finally, the secrets are `export`ed into the environment as `SECRET_<YOUR_SECRET_NAME>=<secret file content>`.
 
