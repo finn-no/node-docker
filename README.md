@@ -66,7 +66,7 @@ The application is now available at `http://localhost:3030/`!
 
 ## Custom behavior
 
-As mentioned under [Why](#Why), these images are based on the official Docker images for `node:alpine`, and provide all of the same features. However, some behaviors are overridden:
+As mentioned under [Why](#why), these images are based on the official Docker images for `node:alpine`, and provide all of the same features. However, some behaviors are overridden:
 
 ### `CMD`
 
