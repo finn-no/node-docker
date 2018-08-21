@@ -48,7 +48,7 @@ startup() {
       if [ $secret_count -eq 0 ]; then
         log "Found no secrets in '$SECRETS_DIR'"
       else
-        log "Found '$secret_count' secret(s) in '$SECRETS_DIR'"
+        log "Found $secret_count secret(s) in '$SECRETS_DIR'"
         export_secrets_from_dir $SECRETS_DIR
       fi
     fi
