@@ -80,9 +80,9 @@ Secrets located in the file system (e.g., mounted by Kubernetes) are available i
 
 - The default `CMD` is used
 - The environment variable `FIAAS_ENVIRONMENT` is set (we then assume to be deployed by [fiaas-deploy-daemon](https://github.com/fiaas/fiaas-deploy-daemon/blob/master/docs/operator_guide.md#environment))
-- The secrets directory (set using `$SECRETS_DIR`, which defaults to `/var/run/secrets/fiaas`) exists and is nonempty
+- The secrets directory (default `/var/run/secrets/fiaas`, changed by setting the environment variable `SECRETS_DIR`) exists and is nonempty
 
-The names of the secrets (i.e., files) are then converted from `lower-kebab-case` to `UPPER_SNAKE_CASE` and prefixed with `SECRET_`. Finally, the secrets are `export`ed into the environment as `SECRET_<YOUR_SECRET_NAME>=<secret file content>`.
+The names of the secrets (i.e., files in `$SECRETS_DIR`) are then converted from `lower-kebab-case` to `UPPER_SNAKE_CASE` and prefixed with `SECRET_`. Finally, the secrets are `export`ed into the environment as `SECRET_<YOUR_SECRET_NAME>=<secret file content>`.
 
 For example, a secret named `some-pgsql-password` will be exported as `SECRET_SOME_PGSQL_PASSWORD`.
 
