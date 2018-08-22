@@ -11,6 +11,7 @@ These images exist to simplify development of Node applications at FINN. They ar
 - Automatically install dependencies using `yarn` or `npm`, depending on which lockfile is present
 - Provide ready-to-use `onbuild` versions which handle most of what you'll need for the image to be built (see below)
 - Install [`dumb-init`](https://github.com/Yelp/dumb-init) which fixes some issues with signal forwarding
+- Inject secrets from the file system into the environment (more below)
 
 ## Usage
 
@@ -62,6 +63,39 @@ $ docker run -it -p 3030:3000 my-app
 This binds the port (3000) inside the container to port 3030 on your Docker host machine.
 
 The application is now available at `http://localhost:3030/`!
+
+## Custom behavior
+
+As mentioned under [Why](#why), these images are based on the official Docker images for `node:alpine`, and provide all of the same features. However, some behaviors are overridden:
+
+### `CMD`
+
+The default `CMD` behaves exactly as `npm start`.
+
+In almost all cases, you should provide a `start` script and omit `CMD` from your `Dockerfile`.
+
+### Secrets in the environment
+
+Secrets located in the file system (e.g., mounted by Kubernetes) are available in the environment of the Node process if all of these requirements are met:
+
+- The default `CMD` is used
+- The environment variable `FIAAS_ENVIRONMENT` is set (we then assume to be deployed by [fiaas-deploy-daemon](https://github.com/fiaas/fiaas-deploy-daemon/blob/master/docs/operator_guide.md#environment))
+- The secrets directory (default `/var/run/secrets/fiaas`, changed by setting the environment variable `SECRETS_DIR`) exists and is nonempty
+
+The names of the secrets (i.e., files in `$SECRETS_DIR`) are then converted from `lower-kebab-case` to `UPPER_SNAKE_CASE` and prefixed with `SECRET_`. Finally, the secrets are `export`ed into the environment as `SECRET_<YOUR_SECRET_NAME>=<secret file content>`.
+
+For example, a secret named `some-pgsql-password` will be exported as `SECRET_SOME_PGSQL_PASSWORD`.
+
+You can then fetch the secret(s) directly from the environment like this:
+
+```js
+const pgsqlPassword = process.env.SECRET_SOME_PGSQL_PASSWORD;
+```
+
+Note that the secrets are not available in the environment of a shell. If you absolutely need to read them from a shell, you can:
+
+1. Get your Node process ID (pid) with `ps`
+2. Read the secrets from `/proc/<Node pid>/environ`
 
 ## Tags
 
