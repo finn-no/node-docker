@@ -18,7 +18,7 @@ export_secrets_from_dir() {
 
     log "Exporting secret '$filename_without_path' as '$secret_name'"
 
-    local secret=$(<$filename);
+    local secret=$(cat $filename);
 
     export "$secret_name=$secret"
   done
