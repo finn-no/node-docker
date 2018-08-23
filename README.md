@@ -185,7 +185,7 @@ For example, to replace version `6.9.1`:
 
 This will publish the image as `6`, `6.9`, and `6.9.1`, but publish a new `git` tag `6.9.1-1` that does not collide with the already published `6.9.1`.
 
-If you need to place the image again, simply increment the trailing number:
+If you need to replace the image again, simply increment the trailing number:
 
 ```sh-session
 ./release.sh 6.9.1-2
