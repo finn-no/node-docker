@@ -33,10 +33,8 @@ start_app() {
   # Fetch 'start' script from package.json
   start_script="PATH=$path_with_node_modules_binaries $(node -p "require('./package.json').scripts.start")"
 
-  echo "##### start script will be $start_script"
-
   # Execute the script
-  $start_script
+  eval "$start_script"
 }
 
 startup() {
