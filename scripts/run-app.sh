@@ -3,10 +3,9 @@
 log() {
   message="$1"
   message_with_escaped_quotes="$(echo "$message" | sed 's/"/\\"/g')"
-  echo "message" $message
-  echo "message_with…" $message_with_escaped_quotes
 
   iso_8601_timestamp="$(date +%Y-%m-%dT%H:%M:%S%z)"
+
   printf '{"@version": 1, "@timestamp": "%s", "level": "INFO", "message": "%s"}\n' "$iso_8601_timestamp" "$message_with_escaped_quotes"
 }
 
