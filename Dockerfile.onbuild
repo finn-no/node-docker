@@ -1,5 +1,8 @@
 FROM containers.schibsted.io/finntech/node:0.0.0
 
+# Allow installation as non-root user
+ONBUILD RUN npm config set unsafe-perm true
+
 # All but package.json is optional
 ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
 
