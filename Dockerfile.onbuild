@@ -11,7 +11,7 @@ ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.j
 # TODO: When Finnbuild uses Docker 1.13, we can use --squash, which means this won't have to be one giant command
 ONBUILD RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
-    install-dependencies.sh && \
+    /home/node/scripts/install-dependencies.sh && \
     rm /usr/local/bin/yarn && npm uninstall --loglevel warn --global npm && \
     apk del build-dependencies
 
