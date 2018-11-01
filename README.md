@@ -157,6 +157,37 @@ We try to release new versions of these images as soon as possible after the off
 
 ### How
 
+One need Docker on local machine. Docker must be able to run as non root and have "experimental" features enabled.
+
+One can check if Docker is running with "experimental" features enabled with `docker version`:
+
+```sh
+$ docker version
+Client:
+ Version:           18.06.1-ce
+ API version:       1.38
+ Go version:        go1.10.3
+ Git commit:        e68fc7a
+ Built:             Tue Aug 21 17:25:03 2018
+ OS/Arch:           linux/amd64
+ Experimental:      true
+
+Server:
+ Engine:
+  Version:          18.06.1-ce
+  API version:      1.38 (minimum version 1.12)
+  Go version:       go1.10.3
+  Git commit:       e68fc7a
+  Built:            Tue Aug 21 17:23:27 2018
+  OS/Arch:          linux/amd64
+  Experimental:     true
+```
+
+`Experimental` should yeld `true` for both Client and Server.
+
+Do also make sure that the node.js version you want to release has an official node.js Docker image published to docker hub.
+Ex; if you want to publish node.js version 9900.15.2 there should be a 9900.15.2-alpine tag [here](https://hub.docker.com/_/node/).
+
 Log in to Artifactory:
 
 `docker login containers.schibsted.io`
@@ -194,6 +225,64 @@ If you need to replace the image again, simply increment the trailing number:
 🎉 You're done (again)! 🎉
 
 #### Oh no, it failed
+
+There might be multiple issues when releasing. Here are some possible issues:
+
+
+##### Permission denied
+
+On Linux one can encounter the following issue when running `release.sh`:
+
+```sh
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.38/images/json?filters=%7B%22dangling%22%3A%7B%22true%22%3Atrue%7D%7D: dial unix /var/run/docker.sock: connect: permission denied
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.38/images/json: dial unix /var/run/docker.sock: connect: permission denied
+
+
+Copying over base Dockerfiles
+
+rm: cannot remove 'build/10/test/Dockerfile': Permission denied
+rm: cannot remove 'build/10/test-onbuild/Dockerfile': Permission denied
+rm: cannot remove 'build/10/base/Dockerfile': Permission denied
+rm: cannot remove 'build/10/base/scripts/run-app.sh': Permission denied
+rm: cannot remove 'build/10/base/scripts/install-dependencies.sh': Permission denied
+rm: cannot remove 'build/10/onbuild/Dockerfile': Permission denied
+```
+
+This is due to the user one are trying to release with, does not have the correct permissions to Docker.
+Please [see here](https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/) for a resolution.
+
+
+##### "--squash" is only supported on a Docker daemon with experimental features enabled
+
+On Linux one can encounter the following issue when running `release.sh`:
+
+```sh
+
+Building base
+
++ cd base/
++ docker build --pull --squash -t containers.schibsted.io/finntech/node:10 -t containers.schibsted.io/finntech/node:10.13 -t containers.schibsted.io/finntech/node:10.13.0 .
+"--squash" is only supported on a Docker daemon with experimental features enabled
+```
+
+Please [see here](https://stackoverflow.com/questions/44346322/how-to-run-docker-with-experimental-functions-on-ubuntu-16-04) for a resolution.
+
+
+##### Manifest for XXXXXXXXXX not found
+
+One can encounter the following issue when running `release.sh`:
+
+```sh
+Sending build context to Docker daemon  6.656kB
+Step 1/16 : FROM node:9900.15.2-alpine
+manifest for node:node:9900.15.2-alpine not found
+```
+
+The official node.js Docker image of this version are [not yet in Docker Hub](https://hub.docker.com/_/node/).
+There is nothing you can do beside wait for the official image to be published.
+
+
+##### Misc
 
 If the release fails for some reason (typically because you're not properly logged in to Artifactory), simply delete the git tags, correct any problems, and try again:
 
