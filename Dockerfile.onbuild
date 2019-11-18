@@ -1,5 +1,9 @@
 FROM containers.schibsted.io/finntech/node:0.0.0
 
+ONBUILD ARG ARTIFACTORY_USER
+ONBUILD ARG ARTIFACTORY_NPM_SECRET
+ONBUILD ARG ARTIFACTORY_CONTEXT
+
 # Allow installation as non-root user
 ONBUILD RUN npm config set unsafe-perm true
 
