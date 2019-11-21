@@ -5,4 +5,4 @@ ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.j
 
 ONBUILD RUN install-dependencies.sh
 
-ONBUILD COPY . .
+ONBUILD COPY . ./

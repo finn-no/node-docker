@@ -98,7 +98,7 @@ mkdir test
 mkdir test-onbuild
 
 cp ../../Dockerfile.base base/Dockerfile
-cp -r ../../scripts/ base
+cp -r ../../scripts base
 cp ../../Dockerfile.onbuild onbuild/Dockerfile
 cp ../../Dockerfile.test test/Dockerfile
 cp ../../Dockerfile.test-onbuild test-onbuild/Dockerfile

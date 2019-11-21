@@ -19,7 +19,7 @@ ONBUILD RUN apk add --no-cache --virtual build-dependencies make gcc g++ python 
     rm /usr/local/bin/yarn && npm uninstall --loglevel warn --global npm && \
     apk del build-dependencies
 
-ONBUILD COPY . .
+ONBUILD COPY . ./
 
 ONBUILD RUN chown -R node:node .
 ONBUILD USER node
