@@ -32,7 +32,7 @@ RUN apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
     rm /usr/local/bin/yarn && npm uninstall --global npm && \
     apk del build-dependencies
 
-COPY . .
+COPY . ./
 
 RUN chown -R node:node .
 USER node
@@ -120,11 +120,11 @@ Dockerfile.test:
 ```Dockerfile
 FROM containers.schibsted.io/finntech/node:test-<version>
 
-COPY package.json .
+COPY package.json ./
 
 RUN npm install
 
-COPY . .
+COPY . ./
 ```
 
 Default command when run is `npm test`.
