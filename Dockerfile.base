@@ -17,7 +17,7 @@ RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/
 RUN chmod +x /usr/local/bin/dumb-init
 RUN apk del dumb-init-dependencies
 
-COPY scripts /home/node/scripts
+COPY scripts /home/node/scripts/
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 CMD "/home/node/scripts/run-app.sh"
