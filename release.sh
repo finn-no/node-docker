@@ -2,6 +2,16 @@
 
 set -e
 
+if [[ $1 != "build" && $1 != "push" && $# -ne 2 ]]; then
+  echo "Usage: $0 [build|push] nodeVersion"
+  echo "  e.g. $0 push 12.12.0"
+  echo "       $0 build 12.12.0-6   # 6th iteration of the node 12.12.0 image"
+  exit 1
+fi
+
+COMMAND=$1
+VERSION=$2
+
 # xargs on mac throws on unknown flags, but the behavior is the default. So try
 # to run it, and if it fails, use plain `xargs`
 xargs_command="xargs --no-run-if-empty"
@@ -11,13 +21,12 @@ then
   xargs_command="xargs"
 fi
 
-if [[ -n $(git status -s) ]]
-then
+if [[ -n $(git status -s) ]]; then
   echo git working directory is not clean
   exit 1
 fi
 
-versions=(${1//./ })
+versions=(${VERSION//./ })
 
 tag=containers.schibsted.io/finntech/node
 onbuild_tag="$tag:onbuild"
@@ -47,26 +56,31 @@ test_onbuild_tag_major="$test_onbuild_tag-$major"
 test_onbuild_tag_minor="$test_onbuild_tag_major.$minor"
 test_onbuild_tag_patch="$test_onbuild_tag_minor.$patch"
 
-echo This will create the following tags:
-echo "$tag_major"
-echo "$tag_minor"
-echo "$tag_patch"
-echo "$onbuild_tag_major"
-echo "$onbuild_tag_minor"
-echo "$onbuild_tag_patch"
-echo "$test_tag_major"
-echo "$test_tag_minor"
-echo "$test_tag_patch"
-echo "$test_onbuild_tag_major"
-echo "$test_onbuild_tag_minor"
-echo "$test_onbuild_tag_patch"
+if [[ $COMMAND == "push" ]]; then
+  echo "You are pushing, so this will create the following tags:\n\n"
+else
+  echo "You are just building, but a push would have created the following tags:"
+fi
+echo "
+$tag_major
+$tag_minor
+$tag_patch
+$onbuild_tag_major
+$onbuild_tag_minor
+$onbuild_tag_patch
+$test_tag_major
+$test_tag_minor
+$test_tag_patch
+$test_onbuild_tag_major
+$test_onbuild_tag_minor
+$test_onbuild_tag_patch
+"
 
 # http://stackoverflow.com/a/1885534/1850276
 read -p "Do you want to continue? (yN)" -n 1 -r
 echo # move to a new line
 
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   exit 1
 fi
 
@@ -111,54 +125,44 @@ find . -type f -exec sed -i "" -e "s/0.0.0/$node_version/" {} \;
 
 echo Building docker images
 
-printf "\n\nBuilding base\n\n"
-
 # Use subshells to print command being run
+
+printf "\n\nBuilding base\n\n"
 (
-set -x
-
-cd base/
-
-# This one does `pull` to ensure we've got the latest upstream image
-docker build --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+  set -x
+  cd base/
+  # This one does `pull` to ensure we've got the latest upstream image
+  docker build --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
 
 printf "\n\nBuilding onbuild\n\n"
-
 (
-set -x
-
-cd onbuild/
-
-docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
+  set -x
+  cd onbuild/
+  docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
 printf "\n\nBuilding test\n\n"
-
 (
-set -x
-
-cd test/
-
-docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+  set -x
+  cd test/
+  docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
 )
 
 printf "\n\nBuilding test-onbuild\n\n"
-
 (
-set -x
-
-cd test-onbuild/
-
-docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
+  set -x
+  cd test-onbuild/
+  docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
 )
 
-echo Pushing "$tag" to Docker Hub
+if [[ $COMMAND == "build" ]]; then
+  printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
+else
+  printf "\nPushing \"$tag\" to Docker Hub\n\n"
+  docker push "$tag"
 
-docker push "$tag"
-
-echo Tagging the commit, and pusing it to GitHub
-
-git tag "$1" -m \""$1"\"
-
-git push origin master --follow-tags
+  echo Tagging the commit, and pusing it to GitHub
+  git tag "$VERSION" -m \""$VERSION"\"
+  git push origin master --follow-tags
+fi
