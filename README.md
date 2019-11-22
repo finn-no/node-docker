@@ -194,12 +194,18 @@ Log in to Artifactory:
 
 Username is your email address. Password is the __API key__ found on [your Artifactory profile page](https://artifacts.schibsted.io/artifactory/webapp/#/profile).
 
-Run `release.sh` to release new versions. The version should match the official Node version.
+Run `release.sh` to build and/or release new versions. The version should match the official Node version.
 
-For example, to release an image wrapping Node `6.9.1`:
+To just build the image locally for Node `6.9.1` without pushing anything:
 
 ```sh-session
-./release.sh 6.9.1
+./release.sh build 6.9.1
+```
+
+To build and release that image:
+
+```sh-session
+./release.sh push 6.9.1
 ```
 
 🎉 You're done! 🎉
@@ -211,7 +217,7 @@ If something is wrong with a published image and you need to republish the same 
 For example, to replace version `6.9.1`:
 
 ```sh-session
-./release.sh 6.9.1-1
+./release.sh push 6.9.1-1
 ```
 
 This will publish the image as `6`, `6.9`, and `6.9.1`, but publish a new `git` tag `6.9.1-1` that does not collide with the already published `6.9.1`.
@@ -219,7 +225,7 @@ This will publish the image as `6`, `6.9`, and `6.9.1`, but publish a new `git` 
 If you need to replace the image again, simply increment the trailing number:
 
 ```sh-session
-./release.sh 6.9.1-2
+./release.sh push 6.9.1-2
 ```
 
 🎉 You're done (again)! 🎉
