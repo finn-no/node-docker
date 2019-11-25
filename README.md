@@ -230,6 +230,20 @@ If you need to replace the image again, simply increment the trailing number:
 
 🎉 You're done (again)! 🎉
 
+#### NPM repository with authentication
+
+If your NPM repo requires authentication, you can use variables in your `.npmrc`, like this:
+```
+_auth="${ARTIFACTORY_NPM_SECRET}"
+always-auth=true
+email="${ARTIFACTORY_USER}"
+registry="${ARTIFACTORY_CONTEXT}/api/npm/npm-virtual"
+```
+Use with e.g.
+```
+docker build --build-arg ARTIFACTORY_USER=me@example.com ...
+```
+
 #### Fail build if npm/yarn lockfile isn't up to date
 
 Normal operation is to run `yarn install` or `npm install`.  If you'd rather fail the build if yarn.lock /
