@@ -230,6 +230,16 @@ If you need to replace the image again, simply increment the trailing number:
 
 🎉 You're done (again)! 🎉
 
+#### Fail build if npm/yarn lockfile isn't up to date
+
+Normal operation is to run `yarn install` or `npm install`.  If you'd rather fail the build if yarn.lock /
+package-lock.json / npm-shrinkwrap.json isn't updated, set the `FAIL_ON_DIRTY_LOCKFILE` variable to something.
+Now `yarn install --frozen-lockfile` or `npm ci` will be run instead.
+
+```
+docker build --build-arg FAIL_ON_DIRTY_LOCKFILE=yes ...
+```
+
 #### Oh no, it failed
 
 There might be multiple issues when releasing. Here are some possible issues:
@@ -286,7 +296,6 @@ manifest for node:node:9900.15.2-alpine not found
 
 The official node.js Docker image of this version are [not yet in Docker Hub](https://hub.docker.com/_/node/).
 There is nothing you can do beside wait for the official image to be published.
-
 
 ##### Misc
 
