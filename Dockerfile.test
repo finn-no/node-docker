@@ -1,4 +1,4 @@
-FROM containers.schibsted.io/finntech/node:0.0.0
+FROM containers.schibsted.io/finntech/node:NODE_VERSION_TEMPLATE
 
 # Reset NODE_ENV=production
 ENV NODE_ENV test

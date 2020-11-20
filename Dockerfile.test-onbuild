@@ -1,4 +1,4 @@
-FROM containers.schibsted.io/finntech/node:test-0.0.0
+FROM containers.schibsted.io/finntech/node:test-NODE_VERSION_TEMPLATE
 
 # All but package.json is optional
 ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
