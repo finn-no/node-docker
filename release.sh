@@ -121,7 +121,7 @@ echo Setting version in Dockerfiles to "$node_version"
 
 # -i "" -e is necessary on OSX
 # http://stackoverflow.com/a/19457213/1850276
-find . -type f -exec sed -i "" -e "s/0.0.0/$node_version/" {} \;
+find . -type f -exec sed -i "" -e "s/NODE_VERSION_TEMPLATE/$node_version/" {} \;
 
 echo Building docker images
 
