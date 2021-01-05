@@ -160,7 +160,7 @@ if [[ $COMMAND == "build" ]]; then
   printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
 else
   printf "\nPushing \"$tag\" to Docker Hub\n\n"
-  docker push "$tag"
+  docker push -a "$tag"
 
   echo Tagging the commit, and pusing it to GitHub
   git tag "$VERSION" -m \""$VERSION"\"
