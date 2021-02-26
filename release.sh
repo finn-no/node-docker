@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -o errexit -o pipefail -o nounset
 
 if [[ $1 != "build" && $1 != "push" && $# -ne 2 ]]; then
   echo "Usage: $0 [build|push] nodeVersion"
@@ -38,7 +38,7 @@ minor=${versions[1]}
 patch_and_revision=(${versions[2]//-/ })
 
 patch=${patch_and_revision[0]}
-revision=${patch_and_revision[1]}
+revision=${patch_and_revision[1]:-}
 
 node_version="$major.$minor.$patch"
 
