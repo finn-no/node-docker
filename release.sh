@@ -109,6 +109,7 @@ images_for_deletion() {
   done | sort -u)
 }
 while true; do
+  printf ·
   deleteimages=$(images_for_deletion)
   if [[ $deleteimages == "" ]]; then
     break

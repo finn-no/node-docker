@@ -4,12 +4,13 @@ ONBUILD ARG ARTIFACTORY_USER
 ONBUILD ARG ARTIFACTORY_NPM_SECRET
 ONBUILD ARG ARTIFACTORY_CONTEXT
 ONBUILD ARG FAIL_ON_DIRTY_LOCKFILE
+ONBUILD ARG YARN_VERSION
 
 # Allow installation as non-root user
 ONBUILD RUN npm config set unsafe-perm true
 
 # All but package.json is optional
-ONBUILD COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
+ONBUILD COPY package.json yarn.lock* .yarnrc.yml* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
 
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small

@@ -21,7 +21,7 @@ Create a `Dockerfile` in the root of your project:
 FROM containers.schibsted.io/finntech/node:<version>
 
 # All but package.json is optional, remove unused if you want
-COPY package.json yarn.lock* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
+COPY package.json yarn.lock* .yarnrc.yml .npmrc* npm-shrinkwrap.json* package-lock.json* ./
 
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small

@@ -1,4 +1,5 @@
 FROM dockerhubproxy.schibsted.io/node:NODE_VERSION_TEMPLATE-alpine
+ARG YARN_VERSION
 
 LABEL maintainer "Simen Bekkhus <simen.bekkhus@finn.no>"
 LABEL no.finn.docker.node-version "$NODE_VERSION"
@@ -11,7 +12,7 @@ EXPOSE 3000
 RUN mkdir -p /home/node/src
 WORKDIR /home/node/src
 
-RUN apk add --no-cache dumb-init ca-certificates wget
+RUN apk add --no-cache dumb-init ca-certificates wget bash
 RUN update-ca-certificates
 
 COPY scripts /home/node/scripts/
