@@ -6,17 +6,7 @@ err_report() {
 }
 trap 'err_report' ERR
 
-if [[ $1 != "build" && $1 != "push" && $# -ne 2 ]]; then
-  echo "Usage: $0 [build|push] nodeVersion"
-  echo "  e.g. $0 push 12.12.0"
-  echo "       $0 build 12.12.0-6   # 6th iteration of the node 12.12.0 image"
-  exit 1
-fi
-
-COMMAND=$1
-VERSION=$2
-
-if [[ $1 != "build" && $1 != "push" && $# -ne 2 ]]; then
+if [[ $1 != "build" && $1 != "push" || $# -ne 2 ]]; then
   echo "Usage: $0 [build|push] nodeVersion"
   echo "  e.g. $0 push 12.12.0"
   echo "       $0 build 12.12.0-6   # 6th iteration of the node 12.12.0 image"
