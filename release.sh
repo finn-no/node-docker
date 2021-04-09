@@ -94,12 +94,12 @@ printf "\n\nDeleting old container images\n\n"
 # we need to run in a loop to do multiple runs
 
 images_for_deletion() {
-  deleteimages=""
-  nodeimages=$(docker images | awk -v tag="$tag" '$0 ~ tag { print $3 }')
-  allimages=$(docker images -q)
+  local deleteimages=""
+  local nodeimages=$(docker images | awk -v tag="$tag" '$0 ~ tag { print $3 }')
+  local allimages=$(docker images -q)
   for image in $allimages; do
     printf . >&2
-    imagehistory=$(docker history -q $image)
+    local imagehistory=$(docker history -q $image)
     for nodeimage in $nodeimages; do
       for history in $imagehistory; do
         if [[ $history == $nodeimage && $deleteimages != *"$image"* ]]; then
