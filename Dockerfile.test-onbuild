@@ -1,7 +1,7 @@
 FROM containers.schibsted.io/finntech/node:test-NODE_VERSION_TEMPLATE
 
 # All but package.json is optional
-ONBUILD COPY package.json yarn.lock* .yarnrc.yml* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
+ONBUILD COPY package.json yarn.lock* .yarnrc* .npmrc* npm-shrinkwrap.json* package-lock.json* ./
 
 ONBUILD RUN install-dependencies.sh
 
