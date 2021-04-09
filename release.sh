@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-set -o errexit -o pipefail -o nounset
+set -o errexit -o pipefail -o nounset -o errtrace
+err_report() {
+  echo "ERROR on line $(caller)" >&2
+}
+trap 'err_report' ERR
 
 if [[ $1 != "build" && $1 != "push" && $# -ne 2 ]]; then
   echo "Usage: $0 [build|push] nodeVersion"
@@ -100,16 +104,24 @@ printf "\n\nDeleting old container images\n\n"
 # we need to run in a loop to do multiple runs
 
 images_for_deletion() {
+  deleteimages=""
   nodeimages=$(docker images | awk -v tag="$tag" '$0 ~ tag { print $3 }')
   allimages=$(docker images -q)
-  echo $(for img in $allimages; do
-    for nodeimg in $nodeimages; do
-      docker history -q $img | grep -q $nodeimg && echo $img
+  for image in $allimages; do
+    imagehistory=$(docker history -q $image)
+    for nodeimage in $nodeimages; do
+      printf . >&2
+      for history in $imagehistory; do
+        if [[ $history == $nodeimage && $deleteimages != *"$image"* ]]; then
+          deleteimages+=" $image"
+        fi
+      done
     done
-  done | sort -u)
+  done
+  echo $deleteimages
 }
 while true; do
-  printf ·
+  printf · >&2
   deleteimages=$(images_for_deletion)
   if [[ $deleteimages == "" ]]; then
     break
