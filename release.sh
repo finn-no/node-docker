@@ -98,9 +98,9 @@ images_for_deletion() {
   nodeimages=$(docker images | awk -v tag="$tag" '$0 ~ tag { print $3 }')
   allimages=$(docker images -q)
   for image in $allimages; do
+    printf . >&2
     imagehistory=$(docker history -q $image)
     for nodeimage in $nodeimages; do
-      printf . >&2
       for history in $imagehistory; do
         if [[ $history == $nodeimage && $deleteimages != *"$image"* ]]; then
           deleteimages+=" $image"
@@ -117,7 +117,7 @@ while true; do
     break
   fi
   for del in $deleteimages; do
-    echo Deleting image $del
+    printf "\nDeleting image $del"
     docker image rm -f $del || true
   done
 done
