@@ -14,11 +14,10 @@ else
   NPM_CMD="install"
 fi
 
-if [[ -n $YARN_VERSION ]]; then
-  yarn set version $YARN_VERSION
-fi
-
 if [[ -f "/home/node/src/yarn.lock" || -f "/home/node/src/.yarnrc.yml" || -f "/home/node/src/.yarnrc" ]]; then
+  if [[ -n $YARN_VERSION ]]; then
+    yarn set version $YARN_VERSION
+  fi
   yarn install $YARN_OPTS
   # Check if the installed tree is correct. Install all dependencies if not
   yarn check --verify-tree || NODE_ENV=development yarn install
