@@ -16,7 +16,8 @@ ONBUILD COPY package.json yarn.lock* .yarnrc* .npmrc* npm-shrinkwrap.json* packa
 # This is in one giant command to keep the image size small
 # TODO: When Finnbuild uses Docker 1.13, we can use --squash, which means this won't have to be one giant command
 ONBUILD RUN apk upgrade -U && \
-    apk add --no-cache --virtual build-dependencies make gcc g++ python git && \
+    apk add --no-cache --virtual build-dependencies make gcc g++ python git || \
+    apk add --no-cache --virtual build-dependencies make gcc g++ python3 git && # 'python' isn't available in alpine3.12+ \
     # This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
     install-dependencies.sh && \
     rm /usr/local/bin/yarn && npm uninstall --loglevel warn --global npm && \

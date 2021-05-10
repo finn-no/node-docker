@@ -4,6 +4,7 @@ FROM containers.schibsted.io/finntech/node:NODE_VERSION_TEMPLATE
 ENV NODE_ENV test
 
 # Install dependencies for native builds and yarn
-RUN apk add --no-cache make gcc g++ python git
+RUN apk add --no-cache make gcc g++ python git || \
+    apk add --no-cache make gcc g++ python3 git # 'python' isn't available in alpine3.12+ \
 
 CMD ["npm", "test"]
