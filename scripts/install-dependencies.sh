@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# This script does `yarn install` if a `yarn.lock` file is present, otherwise `npm install`
+
 set -e
 
 if [[ -n "${FAIL_ON_DIRTY_LOCKFILE}" ]]; then
