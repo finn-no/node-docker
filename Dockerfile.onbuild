@@ -24,5 +24,6 @@ ONBUILD RUN apk upgrade -U && \
 
 ONBUILD COPY . ./
 
+ONBUILD RUN adduser -D node 
 ONBUILD RUN chown -R node:node .
 ONBUILD USER node
