@@ -14,6 +14,7 @@ WORKDIR /home/node/src
 
 RUN apk upgrade -U && \
     apk add --no-cache dumb-init ca-certificates wget bash && \
+    npm i -g pnpm && \
     update-ca-certificates
 
 COPY scripts /home/node/scripts/
