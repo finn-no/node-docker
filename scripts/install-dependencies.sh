@@ -24,6 +24,8 @@ if [[ -f "/home/node/src/yarn.lock" || -f "/home/node/src/.yarnrc.yml" || -f "/h
   # Check if the installed tree is correct. Install all dependencies if not
   yarn check --verify-tree || NODE_ENV=development yarn install
   yarn cache clean
+elif [[ -f "/home/node/src/pnpm-lock.yaml" ]]; then
+  pnpm i --prefer-frozen-lockfile --prod
 elif [[ -f "/home/node/src/package-lock.json" || -f "/home/node/src/npm-shrinkwrap.json" ]]; then
   npm $NPM_CMD
   npm cache clean --force
