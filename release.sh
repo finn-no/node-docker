@@ -6,15 +6,11 @@ err_report() {
 }
 trap 'err_report' ERR
 
-if [[ $(uname -p) == "arm64" ]]; then
-  echo "Building on arm is not supported right now, see https://github.com/finn-no/node-docker/issues/26"
-  exit 1
-fi
-
-if [[ ${1:-} != "build" && ${1:-} != "push" || $# -ne 2 ]]; then
-  echo "Usage: $0 [build|push] nodeVersion"
-  echo "  e.g. $0 push 12.12.0"
-  echo "       $0 build 12.12.0-6   # 6th iteration of the node 12.12.0 image"
+if [[ ${1:-} != "build" && ${1:-} != "push" && ${1:-} != "buildlocal" || $# -ne 2 ]]; then
+  echo "Usage: $0 [build|buildlocal|push] nodeVersion"
+  echo "  e.g. $0 push 12.12.0       # build and push image to docker repository, and push tags to git"
+  echo "       $0 build 12.12.0-6    # 6th iteration of the node 12.12.0 image"
+  echo "       $0 buildlocal 12.12.0 # build image for local arch and store in local docker cache"
   exit 1
 fi
 
@@ -29,7 +25,7 @@ if ! echo "" | ${xargs_command} >/dev/null 2>&1; then
   xargs_command="xargs"
 fi
 
-if [[ -n $(git status -s) ]]; then
+if [[ $COMMAND == "push" && -n $(git status -s) ]]; then
   echo git working directory is not clean
   exit 1
 fi
@@ -88,7 +84,7 @@ $test_onbuild_tag_patch
 read -p "Do you want to continue? (yN)" -n 1 -r
 echo # move to a new line
 
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+if [[ $REPLY != "y" ]]; then
   exit 1
 fi
 
@@ -142,8 +138,11 @@ mkdir test-onbuild
 cp ../../Dockerfile.base base/Dockerfile
 cp -r ../../scripts base
 cp ../../Dockerfile.onbuild onbuild/Dockerfile
+cp -r ../../scripts ../../Dockerfile.base onbuild
 cp ../../Dockerfile.test test/Dockerfile
+cp -r ../../scripts ../../Dockerfile.base test
 cp ../../Dockerfile.test-onbuild test-onbuild/Dockerfile
+cp -r ../../scripts ../../Dockerfile.base test-onbuild
 
 echo Setting version in Dockerfiles to "$node_version"
 
@@ -155,42 +154,58 @@ echo Building docker images
 
 # Use subshells to print command being run
 
+BUILD_ARGS="buildx build"
+if [[ $COMMAND == "buildlocal" ]]; then
+  if [[ $(uname -m) == "arm64" ]]; then
+    BUILD_ARGS+=" --load --platform linux/arm64"
+  else
+    BUILD_ARGS+=" --load --platform linux/amd64"
+  fi
+else
+  BUILD_ARGS+=" --platform linux/arm64,linux/amd64"
+fi
+
+if [[ $COMMAND == "push" ]]; then
+  BUILD_ARGS+=" --push"
+fi
+
+BUILDX_NODE="$(docker buildx create --use)"
+
 printf "\n\nBuilding base\n\n"
 (
   set -x
   cd base/
   # This one does `pull` to ensure we've got the latest upstream image
-  docker build --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+  docker $BUILD_ARGS --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
 
 printf "\n\nBuilding onbuild\n\n"
 (
   set -x
   cd onbuild/
-  docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
+  docker $BUILD_ARGS -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
 printf "\n\nBuilding test\n\n"
 (
   set -x
   cd test/
-  docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+  docker $BUILD_ARGS --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
 )
 
 printf "\n\nBuilding test-onbuild\n\n"
 (
   set -x
   cd test-onbuild/
-  docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
+  docker $BUILD_ARGS -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
 )
 
-if [[ $COMMAND == "build" ]]; then
-  printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
-else
-  printf "\nPushing \"$tag\" to Docker Hub\n\n"
-  docker push -a "$tag"
-
-  echo Tagging the commit, and pusing it to GitHub
+if [[ $COMMAND == "push" ]]; then
+  echo Tagging the commit, and pushing it to GitHub
   git tag "$VERSION" -m \""$VERSION"\"
   git push origin master --follow-tags
+else
+  printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
 fi
+
+docker buildx rm "$BUILDX_NODE"
