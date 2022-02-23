@@ -155,42 +155,47 @@ echo Building docker images
 
 # Use subshells to print command being run
 
+BUILD_ARGS="buildx build --platform linux/arm64,linux/amd64"
+BUILDX_NODE="$(docker buildx create --use)"
+
 printf "\n\nBuilding base\n\n"
 (
   set -x
   cd base/
   # This one does `pull` to ensure we've got the latest upstream image
-  docker build --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
+  docker $BUILD_ARGS --pull --squash -t "$tag_major" -t "$tag_minor" -t "$tag_patch" .
 )
 
 printf "\n\nBuilding onbuild\n\n"
 (
   set -x
   cd onbuild/
-  docker build -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
+  docker $BUILD_ARGS -t "$onbuild_tag_major" -t "$onbuild_tag_minor" -t "$onbuild_tag_patch" .
 )
 
 printf "\n\nBuilding test\n\n"
 (
   set -x
   cd test/
-  docker build --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
+  docker $BUILD_ARGS --squash -t "$test_tag_major" -t "$test_tag_minor" -t "$test_tag_patch" .
 )
 
 printf "\n\nBuilding test-onbuild\n\n"
 (
   set -x
   cd test-onbuild/
-  docker build -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
+  docker $BUILD_ARGS -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
 )
 
 if [[ $COMMAND == "build" ]]; then
   printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
 else
   printf "\nPushing \"$tag\" to Docker Hub\n\n"
-  docker push -a "$tag"
+  docker $BUILD_ARGS --push -a "$tag"
 
   echo Tagging the commit, and pusing it to GitHub
   git tag "$VERSION" -m \""$VERSION"\"
   git push origin master --follow-tags
 fi
+
+docker buildx rm "$BUILDX_NODE"
