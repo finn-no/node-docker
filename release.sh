@@ -189,12 +189,12 @@ printf "\n\nBuilding test-onbuild\n\n"
   docker $BUILD_ARGS -t "$test_onbuild_tag_major" -t "$test_onbuild_tag_minor" -t "$test_onbuild_tag_patch" .
 )
 
-if [[ $COMMAND == "build" ]]; then
-  printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
-else
+if [[ $COMMAND == "push" ]]; then
   echo Tagging the commit, and pushing it to GitHub
   git tag "$VERSION" -m \""$VERSION"\"
   git push origin master --follow-tags
+else
+  printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
 fi
 
 docker buildx rm "$BUILDX_NODE"
