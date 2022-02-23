@@ -6,11 +6,6 @@ err_report() {
 }
 trap 'err_report' ERR
 
-if [[ $(uname -p) == "arm64" ]]; then
-  echo "Building on arm is not supported right now, see https://github.com/finn-no/node-docker/issues/26"
-  exit 1
-fi
-
 if [[ ${1:-} != "build" && ${1:-} != "push" || $# -ne 2 ]]; then
   echo "Usage: $0 [build|push] nodeVersion"
   echo "  e.g. $0 push 12.12.0"
