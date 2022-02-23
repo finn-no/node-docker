@@ -24,7 +24,7 @@ if ! echo "" | ${xargs_command} >/dev/null 2>&1; then
   xargs_command="xargs"
 fi
 
-if [[ $COMMAND = "push" && -n $(git status -s) ]]; then
+if [[ $COMMAND == "push" && -n $(git status -s) ]]; then
   echo git working directory is not clean
   exit 1
 fi
@@ -83,7 +83,7 @@ $test_onbuild_tag_patch
 read -p "Do you want to continue? (yN)" -n 1 -r
 echo # move to a new line
 
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+if [[ $REPLY != "y" ]]; then
   exit 1
 fi
 
