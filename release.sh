@@ -6,10 +6,11 @@ err_report() {
 }
 trap 'err_report' ERR
 
-if [[ ${1:-} != "build" && ${1:-} != "push" || $# -ne 2 ]]; then
-  echo "Usage: $0 [build|push] nodeVersion"
-  echo "  e.g. $0 push 12.12.0"
-  echo "       $0 build 12.12.0-6   # 6th iteration of the node 12.12.0 image"
+if [[ ${1:-} != "build" && ${1:-} != "push" && ${1:-} != "buildlocal" || $# -ne 2 ]]; then
+  echo "Usage: $0 [build|buildlocal|push] nodeVersion"
+  echo "  e.g. $0 push 12.12.0       # build and push image to docker repository, and push tags to git"
+  echo "       $0 build 12.12.0-6    # 6th iteration of the node 12.12.0 image"
+  echo "       $0 buildlocal 12.12.0 # build image for local arch and store in local docker cache"
   exit 1
 fi
 
@@ -153,12 +154,22 @@ echo Building docker images
 
 # Use subshells to print command being run
 
-BUILD_ARGS="buildx build --platform linux/arm64,linux/amd64"
-BUILDX_NODE="$(docker buildx create --use)"
+BUILD_ARGS="buildx build"
+if [[ $COMMAND == "buildlocal" ]]; then
+  if [[ $(uname -m) == "arm64" ]]; then
+    BUILD_ARGS+=" --load --platform linux/arm64"
+  else
+    BUILD_ARGS+=" --load --platform linux/amd64"
+  fi
+else
+  BUILD_ARGS+=" --platform linux/arm64,linux/amd64"
+fi
 
 if [[ $COMMAND == "push" ]]; then
-  BUILD_ARGS="$BUILD_ARGS --push"
+  BUILD_ARGS+=" --push"
 fi
+
+BUILDX_NODE="$(docker buildx create --use)"
 
 printf "\n\nBuilding base\n\n"
 (

@@ -196,16 +196,19 @@ Username is your email address. Password is the __API key__ found on [your Artif
 
 Run `release.sh` to build and/or release new versions. The version should match the official Node version.
 
-To just build the image locally for Node `6.9.1` without pushing anything:
-
+To test building the image for both arm64 (Apple M1) & amd64 (Intel) for Node `16.13.0` without pushing anything:
 ```sh-session
-./release.sh build 6.9.1
+./release.sh build 16.13.0
 ```
 
-To build and release that image:
-
+To build and image locally for your local architecture, and add it to your local docker cache for testing:
 ```sh-session
-./release.sh push 6.9.1
+./release.sh buildlocal 16.13.0
+```
+
+To build and release image for both arm64 (Apple M1) & amd64 (Intel):
+```sh-session
+./release.sh push 16.13.0
 ```
 
 🎉 You're done! 🎉
