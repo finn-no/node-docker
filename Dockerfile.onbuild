@@ -1,4 +1,5 @@
-FROM containers.schibsted.io/finntech/node:NODE_VERSION_TEMPLATE
+# syntax = edrevo/dockerfile-plus
+INCLUDE+ ../Dockerfile.base
 
 ONBUILD ARG ARTIFACTORY_USER
 ONBUILD ARG ARTIFACTORY_NPM_SECRET

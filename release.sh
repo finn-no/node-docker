@@ -29,7 +29,7 @@ if ! echo "" | ${xargs_command} >/dev/null 2>&1; then
   xargs_command="xargs"
 fi
 
-if [[ -n $(git status -s) ]]; then
+if [[ $COMMAND = "push" && -n $(git status -s) ]]; then
   echo git working directory is not clean
   exit 1
 fi
@@ -142,8 +142,11 @@ mkdir test-onbuild
 cp ../../Dockerfile.base base/Dockerfile
 cp -r ../../scripts base
 cp ../../Dockerfile.onbuild onbuild/Dockerfile
+cp -r ../../scripts ../../Dockerfile.base onbuild
 cp ../../Dockerfile.test test/Dockerfile
+cp -r ../../scripts ../../Dockerfile.base test
 cp ../../Dockerfile.test-onbuild test-onbuild/Dockerfile
+cp -r ../../scripts ../../Dockerfile.base test-onbuild
 
 echo Setting version in Dockerfiles to "$node_version"
 
@@ -157,6 +160,10 @@ echo Building docker images
 
 BUILD_ARGS="buildx build --platform linux/arm64,linux/amd64"
 BUILDX_NODE="$(docker buildx create --use)"
+
+if [[ $COMMAND == "push" ]]; then
+  BUILD_ARGS="$BUILD_ARGS --push"
+fi
 
 printf "\n\nBuilding base\n\n"
 (
@@ -190,10 +197,7 @@ printf "\n\nBuilding test-onbuild\n\n"
 if [[ $COMMAND == "build" ]]; then
   printf "\nThis is just a build, so new images are NOT pushed and tagged\n\n"
 else
-  printf "\nPushing \"$tag\" to Docker Hub\n\n"
-  docker $BUILD_ARGS --push -a "$tag"
-
-  echo Tagging the commit, and pusing it to GitHub
+  echo Tagging the commit, and pushing it to GitHub
   git tag "$VERSION" -m \""$VERSION"\"
   git push origin master --follow-tags
 fi
