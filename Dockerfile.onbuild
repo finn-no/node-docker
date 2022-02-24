@@ -1,5 +1,4 @@
-# syntax = edrevo/dockerfile-plus
-INCLUDE+ ../Dockerfile.base
+# Dockerfile.base is included here through the release.sh script
 
 ONBUILD ARG ARTIFACTORY_USER
 ONBUILD ARG ARTIFACTORY_NPM_SECRET

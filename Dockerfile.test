@@ -1,5 +1,4 @@
-# syntax = edrevo/dockerfile-plus
-INCLUDE+ ../Dockerfile.base
+# Dockerfile.base is included here through the release.sh script
 
 # Reset NODE_ENV=production
 ENV NODE_ENV test

@@ -126,23 +126,18 @@ done
 printf "\n\nCopying over base Dockerfiles\n\n"
 
 rm -rf build/
-
-mkdir -p "build/$major/base/scripts"
-
+mkdir -p "build/$major"
 cd "build/$major"
 
-mkdir onbuild
-mkdir test
-mkdir test-onbuild
-
-cp ../../Dockerfile.base base/Dockerfile
-cp -r ../../scripts base
-cp ../../Dockerfile.onbuild onbuild/Dockerfile
-cp -r ../../scripts ../../Dockerfile.base onbuild
-cp ../../Dockerfile.test test/Dockerfile
-cp -r ../../scripts ../../Dockerfile.base test
-cp ../../Dockerfile.test-onbuild test-onbuild/Dockerfile
-cp -r ../../scripts ../../Dockerfile.base test-onbuild
+for image in base onbuild test test-onbuild; do
+  mkdir $image
+  cp ../../Dockerfile.base $image/Dockerfile
+  cp -r ../../scripts $image/
+done
+cat ../../Dockerfile.onbuild >> onbuild/Dockerfile
+cat ../../Dockerfile.test >> test/Dockerfile
+cat ../../Dockerfile.test >> test-onbuild/Dockerfile
+cat ../../Dockerfile.test-onbuild >> test-onbuild/Dockerfile
 
 echo Setting version in Dockerfiles to "$node_version"
 
