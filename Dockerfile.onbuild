@@ -10,8 +10,7 @@ ONBUILD ARG YARN_VERSION
 # Allow installation as non-root user
 ONBUILD RUN npm config set unsafe-perm true
 
-# All but package.json is optional
-ONBUILD COPY package.json yarn.lock* .yarnrc* .npmrc* npm-shrinkwrap.json* package-lock.json* pnpm-lock.yaml* ./
+ONBUILD COPY . ./
 
 # Install dependencies for native builds
 # This is in one giant command to keep the image size small
@@ -19,11 +18,10 @@ ONBUILD COPY package.json yarn.lock* .yarnrc* .npmrc* npm-shrinkwrap.json* packa
 ONBUILD RUN apk upgrade -U && \
     apk add --no-cache --virtual build-dependencies make gcc g++ python git || \
     apk add --no-cache --virtual build-dependencies make gcc g++ python3 git && \
+    corepack enable && \
+    corepack prepare --activate --all && \
     install-dependencies.sh && \
-    rm /usr/local/bin/yarn && npm uninstall --loglevel warn --global pnpm && npm uninstall --loglevel warn --global npm && \
     apk del build-dependencies
-
-ONBUILD COPY . ./
 
 ONBUILD RUN chown -R node:node .
 ONBUILD USER node

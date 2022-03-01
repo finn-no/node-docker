@@ -32,7 +32,7 @@ fi
 
 versions=(${VERSION//./ })
 
-tag=containers.schibsted.io/finntech/node
+tag=containers.schibsted.io/finntech/nodejs
 onbuild_tag="$tag:onbuild"
 test_tag="$tag:test"
 test_onbuild_tag="$test_tag-onbuild"
