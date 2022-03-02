@@ -1,7 +1,6 @@
 FROM dockerhubproxy.schibsted.io/node:NODE_VERSION_TEMPLATE-alpine
 ARG YARN_VERSION
 
-LABEL maintainer "Simen Bekkhus <simen.bekkhus@finn.no>"
 LABEL no.finn.docker.node-version "$NODE_VERSION"
 LABEL no.finn.docker.yarn-version "$YARN_VERSION"
 
