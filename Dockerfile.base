@@ -1,8 +1,8 @@
 FROM dockerhubproxy.schibsted.io/node:NODE_VERSION_TEMPLATE-alpine
-ARG YARN_VERSION
+# ARG YARN_VERSION
 
 LABEL no.finn.docker.node-version "$NODE_VERSION"
-LABEL no.finn.docker.yarn-version "$YARN_VERSION"
+# LABEL no.finn.docker.yarn-version "$YARN_VERSION"
 
 ENV NODE_ENV=production PATH="/home/node/scripts:${PATH}" SECRETS_DIR="/var/run/secrets/fiaas"
 
@@ -13,7 +13,7 @@ WORKDIR /home/node/src
 
 RUN apk upgrade -U && \
     apk add --no-cache dumb-init ca-certificates wget bash && \
-    npm i -g pnpm && \
+    # npm i -g pnpm && \
     update-ca-certificates
 
 COPY scripts /home/node/scripts/
