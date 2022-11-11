@@ -22,7 +22,5 @@ ONBUILD RUN apk upgrade -U && \
     rm /usr/local/bin/yarn && npm uninstall --loglevel warn --global pnpm && npm uninstall --loglevel warn --global npm && \
     apk del build-dependencies
 
-ONBUILD COPY . ./
-
-ONBUILD RUN chown -R node:node .
+ONBUILD COPY --chown=node:node . ./
 ONBUILD USER node
